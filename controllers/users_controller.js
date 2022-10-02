@@ -1,9 +1,11 @@
 const User = require('../models/user');
 
 module.exports.profile = function(req, res){
-    
-    return res.render('user_profile',{
-        title: 'User Profile'
+    User.findById(req.params.id, function(err, user){
+        return res.render('user_profile',{
+            title: 'User Profile',
+            profile_user: user
+    });
     });
 }
 // reder the signup page
@@ -52,13 +54,16 @@ module.exports.create = function(req, res){
 
 //sign in and create a session for the user
 module.exports.createSession = function(req,res){
+    req.flash('success', 'Logged in Successfully');
     return res.redirect('/');
 }
 
 //logout from the profile page
 module.exports.destroySession = ('/logout', function(req, res, next) {
+    
     req.logout(function(err) {
       if (err) { return next(err); }
+      req.flash('success', 'You have logged out');
       res.redirect('/');
     });
   });
